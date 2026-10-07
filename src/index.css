@@ -24,6 +24,11 @@
 @custom-variant mobile-tight (@media (max-width: 600px) and (max-height: 760px));
 @custom-variant tablet-roomy (@media (min-width: 601px) and (min-height: 900px));
 
+@keyframes workspace-drawer-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
 @layer base {
   :root {
     @apply font-sans text-navy bg-white antialiased;
