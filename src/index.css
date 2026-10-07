@@ -2,45 +2,120 @@
 
 @theme {
   --font-sans: Arial, Helvetica, sans-serif;
+
   --color-navy: #142e60;
   --color-muted: #8590aa;
   --color-school-yellow: #ffd43b;
 }
 
-/* Height variants keep the complete login form visible on short screens. */
+/*
+ * Responsive variants
+ *
+ * compact:
+ *   Short screens where the complete login form needs tighter spacing.
+ *
+ * short:
+ *   Very short desktop screens.
+ *
+ * narrow:
+ *   Narrow screens/tablets.
+ *
+ * mobile:
+ *   Phones and portrait-oriented smaller devices.
+ *
+ * mobile-tight:
+ *   Small phones with limited vertical space.
+ *
+ * tablet-roomy:
+ *   Tablets with enough vertical space for the roomier layout.
+ */
+
 @custom-variant compact {
-  @media (max-height: 680px), (max-width: 1024px) and (max-height: 800px) {
+  @media (max-height: 680px),
+         (max-width: 1024px) and (max-height: 800px) {
     @slot;
   }
 }
-@custom-variant short (@media (max-height: 490px) and (min-width: 1025px));
-@custom-variant narrow (@media (max-width: 1000px));
-/* Stack phones and tablet proportions; wide smart displays keep the desktop layout. */
+
+@custom-variant short {
+  @media (max-height: 490px) and (min-width: 1025px) {
+    @slot;
+  }
+}
+
+@custom-variant narrow {
+  @media (max-width: 1000px) {
+    @slot;
+  }
+}
+
 @custom-variant mobile {
-  @media (max-width: 600px), (max-width: 1400px) and (min-height: 700px) and (max-aspect-ratio: 31/20) {
+  @media (max-width: 600px),
+         (min-width: 601px) and (max-width: 1000px) and (orientation: portrait) {
     @slot;
   }
 }
-@custom-variant mobile-tight (@media (max-width: 600px) and (max-height: 760px));
-@custom-variant tablet-roomy (@media (min-width: 601px) and (min-height: 900px));
+
+@custom-variant mobile-tight {
+  @media (max-width: 600px) and (max-height: 760px) {
+    @slot;
+  }
+}
+
+@custom-variant tablet-roomy {
+  @media (min-width: 601px) and (max-width: 1200px) and (min-height: 900px) {
+    @slot;
+  }
+}
+
+/*
+ * Workspace drawer animation
+ */
 
 @keyframes workspace-drawer-in {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
+
+/*
+ * Base styles
+ */
 
 @layer base {
   :root {
-    @apply font-sans text-navy bg-white antialiased;
+    @apply bg-white font-sans text-navy antialiased;
+
     line-height: 1.4;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
   }
-  body { @apply m-0 min-w-80; }
-  button { @apply cursor-pointer; -webkit-tap-highlight-color: transparent; }
-  button:focus-visible, input:focus-visible {
+
+  html {
+    @apply min-h-full;
+  }
+
+  body {
+    @apply m-0 min-h-full;
+  }
+
+  button {
+    @apply cursor-pointer;
+
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus-visible,
+  input:focus-visible {
     outline: 3px solid #d7a826;
     outline-offset: 3px;
   }
-  #root { @apply min-h-svh; }
+
+  #root {
+    @apply min-h-svh;
+  }
 }
