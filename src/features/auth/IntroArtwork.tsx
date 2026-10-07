@@ -3,7 +3,7 @@ import schoolBuilding from '../../assets/school-building.jpg'
 // Coordinates follow the reference panel, so every decorative layer scales together.
 export function IntroArtwork() {
   return (
-    <svg className="absolute inset-0 size-full" viewBox="0 0 400 435" preserveAspectRatio="none" aria-hidden="true">
+    <svg className="absolute inset-0 size-full mobile:hidden" viewBox="0 0 400 435" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <clipPath id="intro-panel-clip">
           <path d="M0 0H356C377 61 399 147 400 246C402 326 389 389 370 435H0Z" />
