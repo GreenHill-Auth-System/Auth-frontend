@@ -3,8 +3,10 @@ import { SchoolBrand } from '../../components/SchoolBrand'
 import { LoginForm } from './LoginForm'
 import { WorkspaceIntro } from './WorkspaceIntro'
 
-export function LoginPage() {
-  // Connect these callbacks to the authentication service when it is available.
+type LoginPageProps = { onContinue: () => void }
+
+export function LoginPage({ onContinue }: LoginPageProps) {
+  // The parent owns navigation; authentication can be connected independently.
   return (
     <main className="grid h-svh grid-cols-[60%_40%] overflow-hidden bg-white mobile:flex mobile:flex-col">
       <WorkspaceIntro />
@@ -19,8 +21,8 @@ export function LoginPage() {
             <p className="mb-[25px] text-base leading-[1.4] text-muted compact:mb-[17px] compact:text-[13px] short:mb-[13px] short:text-[11px] mobile-tight:mb-2 mobile-tight:text-xs">Sign in to your Greenhill workspace.</p>
           </header>
           <LoginForm
-            onEmailSignIn={() => { /* TODO: Connect email authentication. */ }}
-            onGoogleSignIn={() => { /* TODO: Connect Google authentication. */ }}
+            onEmailSignIn={onContinue}
+            onGoogleSignIn={onContinue}
             onForgotPassword={() => { /* TODO: Connect password recovery. */ }}
           />
           <p className="mt-6 flex items-center justify-center gap-2 text-[11px] text-muted compact:mt-4 short:mt-[13px] short:text-[8px] mobile-tight:mt-2 mobile-tight:text-[10px]">
