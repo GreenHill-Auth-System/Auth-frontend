@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react'
 import { LoginPage } from './features/auth/LoginPage'
 import { WorkspacePage } from './features/workspaces/WorkspacePage'
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  'http://localhost:8000'
+
 type LoginError = {
   error: string
   message: string
@@ -32,7 +36,6 @@ function App() {
   }, [])
 
   useEffect(() => {
-    // Read the success indicator returned by the Google authentication flow.
     const params = new URLSearchParams(window.location.search)
 
     if (
@@ -41,13 +44,11 @@ function App() {
     ) {
       setLoginSuccess(true)
 
-      // Remove the login indicator from the browser URL.
       window.history.replaceState(null, '', '/workspaces')
     }
   }, [])
 
   useEffect(() => {
-    // Hide the workspace login success message after five seconds.
     if (!loginSuccess) {
       return
     }
@@ -62,7 +63,6 @@ function App() {
   }, [loginSuccess])
 
   useEffect(() => {
-    // Hide the sign-out success message after five seconds.
     if (!signOutSuccess) {
       return
     }
@@ -77,7 +77,6 @@ function App() {
   }, [signOutSuccess])
 
   useEffect(() => {
-    // Verify the Django session whenever the workspace page is opened.
     if (path !== '/workspaces') {
       setCheckingAuthentication(false)
       return
@@ -86,7 +85,7 @@ function App() {
     async function checkAuthentication() {
       try {
         const response = await fetch(
-          'http://localhost:8000/auth/me/',
+          `${API_BASE_URL}/auth/me/`,
           {
             credentials: 'include',
           },
@@ -124,13 +123,12 @@ function App() {
     password: string,
     remember: boolean,
   ) {
-    // Clear previous messages when the user starts signing in again.
     setSignOutSuccess(false)
     setLoginError(null)
 
     try {
       const response = await fetch(
-        'http://localhost:8000/auth/login/',
+        `${API_BASE_URL}/auth/login/`,
         {
           method: 'POST',
           headers: {
@@ -173,7 +171,6 @@ function App() {
         return
       }
 
-      // Mark the login as successful before opening the workspace page.
       setLoginSuccess(true)
       navigate('/workspaces')
     } catch {
@@ -191,28 +188,19 @@ function App() {
 
   async function handleSignOut() {
     try {
-      // Destroy the authenticated Django session.
       await fetch(
-        'http://localhost:8000/auth/logout/',
+        `${API_BASE_URL}/auth/logout/`,
         {
           method: 'POST',
           credentials: 'include',
         },
       )
     } finally {
-      // Clear the workspace login message.
       setLoginSuccess(false)
-
-      // Clear any previous login error.
       setLoginError(null)
-
-      // Show the sign-out success message on the login page.
       setSignOutSuccess(true)
-
-      // Stop the workspace authentication check.
       setCheckingAuthentication(false)
 
-      // Return to the login page.
       navigate('/')
     }
   }
