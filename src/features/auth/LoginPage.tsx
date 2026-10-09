@@ -10,6 +10,10 @@ import { SchoolBrand } from '../../components/SchoolBrand'
 import { LoginForm } from './LoginForm'
 import { WorkspaceIntro } from './WorkspaceIntro'
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  'http://localhost:8000'
+
 type LoginError = {
   error: string
   message: string
@@ -136,7 +140,8 @@ export function LoginPage({
             onGoogleSignIn={() => {
               // Start Google Workspace authentication through the Django backend.
               window.location.href =
-                'http://localhost:8000/auth/google/login/'
+                `${API_BASE_URL.replace(/\/$/, '')}/auth/google/login/`
+
             }}
             onForgotPassword={() => {
               /* TODO: Connect password recovery. */
