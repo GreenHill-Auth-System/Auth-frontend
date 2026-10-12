@@ -3,8 +3,10 @@ import {
   FiCheckCircle,
   FiChevronDown,
   FiExternalLink,
+  FiGrid,
   FiHelpCircle,
   FiLogOut,
+  FiUser,
 } from 'react-icons/fi'
 
 import decorativeCrest from '../../assets/Cropped Blue Crest Emblem.png'
@@ -14,7 +16,7 @@ import { WorkspaceCard } from './WorkspaceCard'
 import { WorkspaceSidebar } from './WorkspaceSidebar'
 import { workspaces } from './workspaces'
 import type { Workspace } from './workspaces'
-
+import { ProfileView } from '../profile/ProfileView'
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
@@ -23,6 +25,8 @@ const API_BASE_URL =
 type WorkspacePageProps = {
   onSignOut: () => void
   loginSuccess: boolean
+  initialTab?: 'workspaces' | 'profile'
+  onTabChange?: (tab: 'workspaces' | 'profile') => void
 }
 
 type DialogContent = {
@@ -35,12 +39,16 @@ type AuthenticatedUser = {
   name: string
   role: string
   authorized_systems: string[]
+  picture?: string
 }
 
 export function WorkspacePage({
   onSignOut,
   loginSuccess,
+  initialTab = 'workspaces',
+  onTabChange,
 }: WorkspacePageProps) {
+  const [activeTab, setActiveTab] = useState<'workspaces' | 'profile'>(initialTab)
   const [accountOpen, setAccountOpen] = useState(false)
   const [dialog, setDialog] = useState<DialogContent | null>(null)
   const [authenticatedUser, setAuthenticatedUser] =
@@ -49,11 +57,22 @@ export function WorkspacePage({
   const accountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab)
+    }
+  }, [initialTab])
+
+  function switchTab(tab: 'workspaces' | 'profile') {
+    setActiveTab(tab)
+    onTabChange?.(tab)
+  }
+
+  useEffect(() => {
     // Retrieve the authenticated user from the Django session.
     async function loadAuthenticatedUser() {
       try {
         const response = await fetch(
-            `${API_BASE_URL.replace(/\/$/, '')}/auth/me/`,
+          `${API_BASE_URL.replace(/\/$/, '')}/auth/me/`,
           {
             credentials: 'include',
           },
@@ -120,6 +139,23 @@ export function WorkspacePage({
     })
   }
 
+  function handleUserUpdate(updated: {
+    name: string
+    email: string
+    picture?: string
+  }) {
+    setAuthenticatedUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            name: updated.name,
+            email: updated.email,
+            picture: updated.picture,
+          }
+        : prev,
+    )
+  }
+
   const accountName =
     authenticatedUser?.name ||
     authenticatedUser?.email ||
@@ -137,6 +173,9 @@ export function WorkspacePage({
     <main className="relative flex min-h-svh overflow-hidden bg-[#152d56] mobile:h-dvh mobile:min-h-0 mobile:flex-col mobile:bg-[#f8fbff]">
       <WorkspaceSidebar
         accountName={accountName}
+        activeTab={activeTab}
+        onWorkspaces={() => switchTab('workspaces')}
+        onProfile={() => switchTab('profile')}
         onHelp={() =>
           setDialog({
             title: 'Need help?',
@@ -145,13 +184,6 @@ export function WorkspacePage({
           })
         }
         onSignOut={onSignOut}
-        onProfile={() =>
-          setDialog({
-            title: 'Profile',
-            message:
-              'Your account profile will be available once authentication is connected.',
-          })
-        }
         onSettings={() =>
           setDialog({
             title: 'Settings',
@@ -162,8 +194,8 @@ export function WorkspacePage({
       />
 
       <section
-        className="relative isolate flex min-w-0 flex-1 flex-col overflow-hidden [border-bottom-left-radius:150px_360px] bg-white px-[6%] pb-12 mobile:min-h-0 mobile:rounded-none mobile:px-6 mobile:pt-[clamp(8px,2dvh,24px)] mobile:pb-5 max-sm:px-5 max-[360px]:pt-2"
-        aria-labelledby="workspace-heading"
+        className="relative isolate flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [border-bottom-left-radius:150px_360px] bg-white px-[6%] pb-12 mobile:min-h-0 mobile:rounded-none mobile:px-6 mobile:pt-[clamp(8px,2dvh,24px)] mobile:pb-5 max-sm:px-5 max-[360px]:pt-2"
+        aria-labelledby={activeTab === 'workspaces' ? 'workspace-heading' : undefined}
       >
         <svg
           className="pointer-events-none absolute inset-0 -z-10 size-full mobile:hidden"
@@ -212,7 +244,7 @@ export function WorkspacePage({
           >
             <button
               type="button"
-              className="flex items-center gap-3 rounded-full p-1 text-xs font-bold text-navy hover:bg-slate-50"
+              className="flex items-center gap-3 rounded-full p-1 text-xs font-bold text-navy hover:bg-slate-50 transition-colors"
               aria-expanded={accountOpen}
               aria-controls="account-actions"
               onClick={() =>
@@ -220,7 +252,7 @@ export function WorkspacePage({
               }
             >
               <span
-                className="grid size-10 place-items-center rounded-full border-2 border-white bg-[#e9edf4] text-sm text-[#304b75] shadow-sm"
+                className="grid size-10 place-items-center rounded-full border-2 border-white bg-[#e9edf4] text-sm text-[#304b75] shadow-sm font-bold"
                 aria-hidden="true"
               >
                 {accountInitials}
@@ -237,12 +269,43 @@ export function WorkspacePage({
             {accountOpen && (
               <div
                 id="account-actions"
-                className="absolute top-full right-0 z-20 mt-2 w-44 rounded-xl border border-slate-100 bg-white p-2 shadow-lg"
+                className="absolute top-full right-0 z-20 mt-2 w-48 rounded-xl border border-slate-100 bg-white p-2 shadow-lg"
               >
                 <button
                   type="button"
+                  onClick={() => {
+                    setAccountOpen(false)
+                    switchTab('profile')
+                  }}
+                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
+                    activeTab === 'profile'
+                      ? 'bg-slate-100 font-bold text-navy'
+                      : 'text-navy hover:bg-slate-50'
+                  }`}
+                >
+                  <FiUser aria-hidden="true" />
+                  My profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAccountOpen(false)
+                    switchTab('workspaces')
+                  }}
+                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
+                    activeTab === 'workspaces'
+                      ? 'bg-slate-100 font-bold text-navy'
+                      : 'text-navy hover:bg-slate-50'
+                  }`}
+                >
+                  <FiGrid aria-hidden="true" />
+                  My workspace
+                </button>
+                <div className="my-1 border-t border-slate-100" />
+                <button
+                  type="button"
                   onClick={onSignOut}
-                  className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm text-navy hover:bg-slate-50"
+                  className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm text-red-600 hover:bg-red-50"
                 >
                   <FiLogOut aria-hidden="true" />
                   Sign out
@@ -252,87 +315,96 @@ export function WorkspacePage({
           </div>
         </header>
 
-        <div className="mx-auto flex w-full max-w-[930px] flex-1 flex-col items-center justify-center pb-4 mobile:items-stretch mobile:justify-start mobile:pb-0 mobile:sm:justify-center">
-          <SchoolBrand className="justify-center gap-3 mobile:hidden [&_img]:h-[74px] [&_img]:w-[60px] [&_span]:text-[23px] max-sm:[&_img]:h-14 max-sm:[&_img]:w-11 max-sm:[&_span]:text-lg" />
+        {activeTab === 'profile' ? (
+          <div className="mx-auto flex w-full max-w-[980px] flex-1 flex-col items-stretch justify-start pt-2 pb-6">
+            <ProfileView
+              user={authenticatedUser}
+              onUserUpdate={handleUserUpdate}
+            />
+          </div>
+        ) : (
+          <div className="mx-auto flex w-full max-w-[930px] flex-1 flex-col items-center justify-center pb-4 mobile:items-stretch mobile:justify-start mobile:pb-0 mobile:sm:justify-center">
+            <SchoolBrand className="justify-center gap-3 mobile:hidden [&_img]:h-[74px] [&_img]:w-[60px] [&_span]:text-[23px] max-sm:[&_img]:h-14 max-sm:[&_img]:w-11 max-sm:[&_span]:text-lg" />
 
-          <div className="mt-12 text-center mobile:mt-0 mobile:text-left mobile:sm:text-center">
-            {loginSuccess && (
-              <div
-                role="status"
-                aria-live="polite"
-                className="mb-5 flex w-full items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-left text-sm text-green-700 shadow-sm"
+            <div className="mt-12 text-center mobile:mt-0 mobile:text-left mobile:sm:text-center">
+              {loginSuccess && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="mb-5 flex w-full items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-left text-sm text-green-700 shadow-sm"
+                >
+                  <FiCheckCircle
+                    className="mt-0.5 size-5 shrink-0 text-green-600"
+                    aria-hidden="true"
+                  />
+
+                  <p className="leading-5">
+                    Welcome back! You’re successfully signed in to your
+                    Greenhill workspace. Please choose a system to get started.
+                  </p>
+                </div>
+              )}
+
+              <h1
+                id="workspace-heading"
+                className="text-[32px] leading-tight font-bold tracking-[-.5px] text-navy mobile:text-[clamp(24px,4.8dvh,38px)] mobile:leading-[1.12] max-[360px]:text-[26px]"
               >
-                <FiCheckCircle
-                  className="mt-0.5 size-5 shrink-0 text-green-600"
+                Choose your
+                <span className="max-sm:block">
+                  {' '}workspace
+                </span>
+              </h1>
+
+              <p className="mt-1 text-base tracking-[.2px] text-muted mobile:mt-2 mobile:max-w-none max-sm:text-sm">
+                Select the system you want to access.
+              </p>
+            </div>
+
+            <div className="mt-9 grid w-full grid-cols-3 gap-7 mobile:mt-[clamp(8px,2dvh,24px)] max-sm:grid-cols-1 mobile:gap-[clamp(8px,2dvh,16px)]">
+              {workspaces.map((workspace) => (
+                <WorkspaceCard
+                  key={workspace.id}
+                  workspace={workspace}
+                  onSelect={selectWorkspace}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                setDialog({
+                  title: 'Need help?',
+                  message:
+                    'Contact the ICT Support Team for help accessing your workspace.',
+                })
+              }
+              className="mt-12 flex items-center gap-4 rounded-lg px-3 py-2 text-left hover:bg-white/70 mobile:mt-6 mobile:w-full mobile:rounded-[18px] mobile:bg-[#eff4fa] mobile:p-5"
+            >
+              <span className="grid shrink-0 place-items-center mobile:size-12 mobile:rounded-full mobile:bg-[#e0e9f4]">
+                <FiHelpCircle
+                  className="size-6 text-navy"
                   aria-hidden="true"
                 />
-
-                <p className="leading-5">
-                  Welcome back! You’re successfully signed in to your
-                  Greenhill workspace. Please choose a system to get started.
-                </p>
-              </div>
-            )}
-
-            <h1
-              id="workspace-heading"
-              className="text-[32px] leading-tight font-bold tracking-[-.5px] text-navy mobile:text-[clamp(24px,4.8dvh,38px)] mobile:leading-[1.12] max-[360px]:text-[26px]"
-            >
-              Choose your
-              <span className="max-sm:block">
-                {' '}workspace
               </span>
-            </h1>
 
-            <p className="mt-1 text-base tracking-[.2px] text-muted mobile:mt-2 mobile:max-w-none max-sm:text-sm">
-              Select the system you want to access.
-            </p>
-          </div>
+              <span className="border-l border-[#e8ecf3] pl-3">
+                <span className="block text-xs font-bold text-navy mobile:text-base">
+                  Need help?
+                </span>
 
-          <div className="mt-9 grid w-full grid-cols-3 gap-7 mobile:mt-[clamp(8px,2dvh,24px)] max-sm:grid-cols-1 mobile:gap-[clamp(8px,2dvh,16px)]">
-            {workspaces.map((workspace) => (
-              <WorkspaceCard
-                key={workspace.id}
-                workspace={workspace}
-                onSelect={selectWorkspace}
-              />
-            ))}
-          </div>
+                <span className="mt-1 block text-xs text-muted mobile:text-sm max-sm:text-xs">
+                  Contact the ICT Support Team
+                </span>
+              </span>
 
-          <button
-            type="button"
-            onClick={() =>
-              setDialog({
-                title: 'Need help?',
-                message:
-                  'Contact the ICT Support Team for help accessing your workspace.',
-              })
-            }
-            className="mt-12 flex items-center gap-4 rounded-lg px-3 py-2 text-left hover:bg-white/70 mobile:mt-6 mobile:w-full mobile:rounded-[18px] mobile:bg-[#eff4fa] mobile:p-5"
-          >
-            <span className="grid shrink-0 place-items-center mobile:size-12 mobile:rounded-full mobile:bg-[#e0e9f4]">
-              <FiHelpCircle
-                className="size-6 text-navy"
+              <FiExternalLink
+                className="ml-auto hidden size-5 shrink-0 text-[#2874ee] mobile:block"
                 aria-hidden="true"
               />
-            </span>
-
-            <span className="border-l border-[#e8ecf3] pl-3">
-              <span className="block text-xs font-bold text-navy mobile:text-base">
-                Need help?
-              </span>
-
-              <span className="mt-1 block text-xs text-muted mobile:text-sm max-sm:text-xs">
-                Contact the ICT Support Team
-              </span>
-            </span>
-
-            <FiExternalLink
-              className="ml-auto hidden size-5 shrink-0 text-[#2874ee] mobile:block"
-              aria-hidden="true"
-            />
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
 
         <img
           src={decorativeCrest}

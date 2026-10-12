@@ -18,8 +18,11 @@ type LoginError = {
 
 function App() {
   const [path, setPath] = useState(window.location.pathname)
+  const isWorkspaceRoute =
+    window.location.pathname === '/workspaces' ||
+    window.location.pathname === '/profile'
   const [checkingAuthentication, setCheckingAuthentication] = useState(
-    window.location.pathname === '/workspaces',
+    isWorkspaceRoute,
   )
   const [loginError, setLoginError] = useState<LoginError | null>(null)
   const [loginSuccess, setLoginSuccess] = useState(false)
@@ -39,12 +42,13 @@ function App() {
     const params = new URLSearchParams(window.location.search)
 
     if (
-      window.location.pathname === '/workspaces' &&
+      (window.location.pathname === '/workspaces' ||
+        window.location.pathname === '/profile') &&
       params.get('login') === 'success'
     ) {
       setLoginSuccess(true)
 
-      window.history.replaceState(null, '', '/workspaces')
+      window.history.replaceState(null, '', window.location.pathname)
     }
   }, [])
 
@@ -77,7 +81,7 @@ function App() {
   }, [signOutSuccess])
 
   useEffect(() => {
-    if (path !== '/workspaces') {
+    if (path !== '/workspaces' && path !== '/profile') {
       setCheckingAuthentication(false)
       return
     }
@@ -205,7 +209,7 @@ function App() {
     }
   }
 
-  if (path === '/workspaces') {
+  if (path === '/workspaces' || path === '/profile') {
     if (checkingAuthentication) {
       return (
         <main className="flex min-h-screen items-center justify-center">
@@ -218,6 +222,12 @@ function App() {
       <WorkspacePage
         onSignOut={handleSignOut}
         loginSuccess={loginSuccess}
+        initialTab={path === '/profile' ? 'profile' : 'workspaces'}
+        onTabChange={(tab) => {
+          const next = tab === 'profile' ? '/profile' : '/workspaces'
+          window.history.pushState(null, '', next)
+          setPath(next)
+        }}
       />
     )
   }
