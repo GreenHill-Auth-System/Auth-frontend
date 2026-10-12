@@ -6,7 +6,7 @@ import crest from '../../assets/Cropped Blue Crest Emblem.png'
 
 type WorkspaceSidebarProps = {
   accountName: string
-  activeTab?: 'workspaces' | 'profile'
+  activeTab?: 'workspaces' | 'profile' | 'settings'
   onWorkspaces?: () => void
   onProfile: () => void
   onSettings: () => void
@@ -68,8 +68,9 @@ export function WorkspaceSidebar({
           </button>
           <button
             type="button"
-            className={`${itemClass} ${inactiveClass}`}
             onClick={onSettings}
+            aria-current={activeTab === 'settings' ? 'page' : undefined}
+            className={`${itemClass} ${activeTab === 'settings' ? activeClass : inactiveClass}`}
           >
             <FiSettings className="size-4 shrink-0" aria-hidden="true" />
             <span className="mobile:sr-only">Settings</span>
@@ -104,7 +105,10 @@ export function WorkspaceSidebar({
             setDrawerOpen(false)
             onProfile()
           }}
-          onSettings={onSettings}
+          onSettings={() => {
+            setDrawerOpen(false)
+            onSettings()
+          }}
           onHelp={onHelp}
           onSignOut={onSignOut}
         />

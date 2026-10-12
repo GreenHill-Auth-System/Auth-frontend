@@ -20,7 +20,8 @@ function App() {
   const [path, setPath] = useState(window.location.pathname)
   const isWorkspaceRoute =
     window.location.pathname === '/workspaces' ||
-    window.location.pathname === '/profile'
+    window.location.pathname === '/profile' ||
+    window.location.pathname === '/settings'
   const [checkingAuthentication, setCheckingAuthentication] = useState(
     isWorkspaceRoute,
   )
@@ -43,7 +44,8 @@ function App() {
 
     if (
       (window.location.pathname === '/workspaces' ||
-        window.location.pathname === '/profile') &&
+        window.location.pathname === '/profile' ||
+        window.location.pathname === '/settings') &&
       params.get('login') === 'success'
     ) {
       setLoginSuccess(true)
@@ -81,7 +83,11 @@ function App() {
   }, [signOutSuccess])
 
   useEffect(() => {
-    if (path !== '/workspaces' && path !== '/profile') {
+    if (
+      path !== '/workspaces' &&
+      path !== '/profile' &&
+      path !== '/settings'
+    ) {
       setCheckingAuthentication(false)
       return
     }
@@ -209,7 +215,11 @@ function App() {
     }
   }
 
-  if (path === '/workspaces' || path === '/profile') {
+  if (
+    path === '/workspaces' ||
+    path === '/profile' ||
+    path === '/settings'
+  ) {
     if (checkingAuthentication) {
       return (
         <main className="flex min-h-screen items-center justify-center">
@@ -218,13 +228,25 @@ function App() {
       )
     }
 
+    const initialTab =
+      path === '/profile'
+        ? 'profile'
+        : path === '/settings'
+          ? 'settings'
+          : 'workspaces'
+
     return (
       <WorkspacePage
         onSignOut={handleSignOut}
         loginSuccess={loginSuccess}
-        initialTab={path === '/profile' ? 'profile' : 'workspaces'}
+        initialTab={initialTab}
         onTabChange={(tab) => {
-          const next = tab === 'profile' ? '/profile' : '/workspaces'
+          const next =
+            tab === 'profile'
+              ? '/profile'
+              : tab === 'settings'
+                ? '/settings'
+                : '/workspaces'
           window.history.pushState(null, '', next)
           setPath(next)
         }}

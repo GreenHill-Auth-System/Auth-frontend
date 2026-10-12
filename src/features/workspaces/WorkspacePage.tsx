@@ -6,6 +6,7 @@ import {
   FiGrid,
   FiHelpCircle,
   FiLogOut,
+  FiSettings,
   FiUser,
 } from 'react-icons/fi'
 
@@ -17,6 +18,7 @@ import { WorkspaceSidebar } from './WorkspaceSidebar'
 import { workspaces } from './workspaces'
 import type { Workspace } from './workspaces'
 import { ProfileView } from '../profile/ProfileView'
+import { SettingsView } from '../settings/SettingsView'
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
@@ -25,8 +27,8 @@ const API_BASE_URL =
 type WorkspacePageProps = {
   onSignOut: () => void
   loginSuccess: boolean
-  initialTab?: 'workspaces' | 'profile'
-  onTabChange?: (tab: 'workspaces' | 'profile') => void
+  initialTab?: 'workspaces' | 'profile' | 'settings'
+  onTabChange?: (tab: 'workspaces' | 'profile' | 'settings') => void
 }
 
 type DialogContent = {
@@ -48,7 +50,9 @@ export function WorkspacePage({
   initialTab = 'workspaces',
   onTabChange,
 }: WorkspacePageProps) {
-  const [activeTab, setActiveTab] = useState<'workspaces' | 'profile'>(initialTab)
+  const [activeTab, setActiveTab] = useState<'workspaces' | 'profile' | 'settings'>(
+    initialTab,
+  )
   const [accountOpen, setAccountOpen] = useState(false)
   const [dialog, setDialog] = useState<DialogContent | null>(null)
   const [authenticatedUser, setAuthenticatedUser] =
@@ -62,7 +66,7 @@ export function WorkspacePage({
     }
   }, [initialTab])
 
-  function switchTab(tab: 'workspaces' | 'profile') {
+  function switchTab(tab: 'workspaces' | 'profile' | 'settings') {
     setActiveTab(tab)
     onTabChange?.(tab)
   }
@@ -176,6 +180,7 @@ export function WorkspacePage({
         activeTab={activeTab}
         onWorkspaces={() => switchTab('workspaces')}
         onProfile={() => switchTab('profile')}
+        onSettings={() => switchTab('settings')}
         onHelp={() =>
           setDialog({
             title: 'Need help?',
@@ -184,13 +189,6 @@ export function WorkspacePage({
           })
         }
         onSignOut={onSignOut}
-        onSettings={() =>
-          setDialog({
-            title: 'Settings',
-            message:
-              'Account settings will be available once account management is connected.',
-          })
-        }
       />
 
       <section
@@ -290,6 +288,21 @@ export function WorkspacePage({
                   type="button"
                   onClick={() => {
                     setAccountOpen(false)
+                    switchTab('settings')
+                  }}
+                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
+                    activeTab === 'settings'
+                      ? 'bg-slate-100 font-bold text-navy'
+                      : 'text-navy hover:bg-slate-50'
+                  }`}
+                >
+                  <FiSettings aria-hidden="true" />
+                  Settings
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAccountOpen(false)
                     switchTab('workspaces')
                   }}
                   className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
@@ -321,6 +334,10 @@ export function WorkspacePage({
               user={authenticatedUser}
               onUserUpdate={handleUserUpdate}
             />
+          </div>
+        ) : activeTab === 'settings' ? (
+          <div className="mx-auto flex w-full max-w-[980px] flex-1 flex-col items-stretch justify-start pt-2 pb-6">
+            <SettingsView />
           </div>
         ) : (
           <div className="mx-auto flex w-full max-w-[930px] flex-1 flex-col items-center justify-center pb-4 mobile:items-stretch mobile:justify-start mobile:pb-0 mobile:sm:justify-center">
