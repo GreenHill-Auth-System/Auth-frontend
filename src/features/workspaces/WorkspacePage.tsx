@@ -115,31 +115,31 @@ export function WorkspacePage({
   }, [])
 
   function selectWorkspace(workspace: Workspace) {
-    const workspaceUrls: Record<Workspace['id'], string> = {
-      executive:
-        import.meta.env.VITE_EID_URL ||
-        'https://greenhill-eid-frontend.onrender.com',
-      procurement:
-        import.meta.env.VITE_PROCUREMENT_URL ||
-        'https://pms-frontend-4fm8.onrender.com/',
-      service:
-        import.meta.env.VITE_INCIDENT_URL ||
-        'https://ismp-frontend.onrender.com/',
-    }
-
-    const targetUrl = workspace.url || workspaceUrls[workspace.id]
-
-    if (targetUrl) {
-      window.location.assign(targetUrl)
-      return
-    }
-
-    setDialog({
-      title: workspace.title,
-      message:
-        'This workspace will be available once its system is connected.',
-    })
+  const workspaceUrls: Record<Workspace['id'], string> = {
+    executive:
+      import.meta.env.VITE_EID_URL ||
+      'https://greenhill-eid-frontend.onrender.com',
+    procurement:
+      import.meta.env.VITE_PROCUREMENT_URL ||
+      'https://pms-frontend-4fm8.onrender.com/',
+    service:
+      import.meta.env.VITE_INCIDENT_URL ||
+      'https://ismp-frontend.onrender.com/',
   }
+
+  const targetUrl = workspace.url || workspaceUrls[workspace.id]
+
+  if (targetUrl) {
+    window.location.assign(targetUrl)
+    return
+  }
+
+  setDialog({
+    title: workspace.title,
+    message:
+      'This workspace will be available once its system is connected.',
+  })
+}
 
   function handleUserUpdate(updated: {
     name: string

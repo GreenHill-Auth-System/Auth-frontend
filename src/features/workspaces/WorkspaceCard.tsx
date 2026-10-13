@@ -29,8 +29,12 @@ export function WorkspaceCard({ workspace, onSelect }: WorkspaceCardProps) {
     return (
       <a
         href={workspace.url}
-        target="_blank"
-        rel="noopener noreferrer"
+        onClick={(e) => {
+          if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+            e.preventDefault()
+            onSelect(workspace)
+          }
+        }}
         className={cardClassName}
       >
         {cardContent}
