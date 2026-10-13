@@ -11,7 +11,7 @@ export function WorkspaceCard({ workspace, onSelect }: WorkspaceCardProps) {
     <>
       <span className="pointer-events-none absolute -top-9 -left-[70%] h-[125%] w-[160%] rounded-full bg-white max-sm:-top-[65%] max-sm:left-[72%] max-sm:h-[200%] max-sm:w-3/4 max-sm:rotate-[35deg] max-sm:bg-white/40" />
       <span className="relative z-[1] flex h-full w-full flex-col max-sm:flex-row max-sm:items-center max-sm:gap-3 max-[360px]:gap-2">
-        <span className={`block shrink-0 max-sm:grid max-sm:place-items-center max-sm:rounded-2xl max-sm:size-[52px] max-[360px]:size-10 max-sm:[&_svg]:size-9 ${workspace.iconBackground}`}>
+        <span className={`block shrink-0 max-sm:grid max-sm:place-items-center max-sm:rounded-2xl max-sm:size-[52px] max-[360px]:size-10 max-sm:[&_svg]:size-9 max-sm:[&_img]:size-9 ${workspace.iconBackground}`}>
           <WorkspaceIcon workspace={workspace.id} />
         </span>
         <span className="my-4 block h-px w-12 bg-[#e9edf5] max-sm:hidden" />
