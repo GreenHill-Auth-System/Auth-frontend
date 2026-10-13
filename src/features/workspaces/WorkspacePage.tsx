@@ -133,6 +133,11 @@ export function WorkspacePage({
   }, [])
 
   function selectWorkspace(workspace: Workspace) {
+    if (workspace.url) {
+      window.open(workspace.url, '_blank', 'noopener,noreferrer')
+      return
+    }
+
     setDialog({
       title: workspace.title,
       message:
