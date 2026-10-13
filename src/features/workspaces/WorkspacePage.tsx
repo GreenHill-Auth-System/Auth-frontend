@@ -119,13 +119,13 @@ export function WorkspacePage({
     const workspaceUrls: Record<Workspace['id'], string> = {
       executive:
         import.meta.env.VITE_EID_URL ||
-        'http://localhost:5174',
+        'https://greenhill-eid-frontend.onrender.com',
       procurement:
         import.meta.env.VITE_PROCUREMENT_URL ||
-        'http://localhost:5175',
+        'https://pms-frontend-4fm8.onrender.com/',
       service:
         import.meta.env.VITE_INCIDENT_URL ||
-        'http://localhost:5176',
+        'https://ismp-frontend.onrender.com',
     }
 
     window.location.assign(workspaceUrls[workspace.id])
