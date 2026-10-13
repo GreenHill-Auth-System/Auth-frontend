@@ -19,10 +19,7 @@ import { workspaces } from './workspaces'
 import type { Workspace } from './workspaces'
 import { ProfileView } from '../profile/ProfileView'
 import { SettingsView } from '../settings/SettingsView'
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000'
+import { apiUrl } from '../../services/api'
 
 type WorkspacePageProps = {
   onSignOut: () => void
@@ -76,7 +73,7 @@ export function WorkspacePage({
     async function loadAuthenticatedUser() {
       try {
         const response = await fetch(
-          `${API_BASE_URL.replace(/\/$/, '')}/auth/me/`,
+          apiUrl('/auth/me/'),
           {
             credentials: 'include',
           },
