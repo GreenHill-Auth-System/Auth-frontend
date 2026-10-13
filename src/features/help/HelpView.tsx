@@ -8,7 +8,6 @@ import {
   FiHelpCircle,
   FiMail,
   FiMessageSquare,
-  FiPhone,
   FiSend,
 } from 'react-icons/fi'
 
