@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { LoginPage } from './features/auth/LoginPage'
 import { WorkspacePage } from './features/workspaces/WorkspacePage'
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000'
+import { apiUrl } from './services/api'
 
 type LoginError = {
   error: string
@@ -95,7 +92,7 @@ function App() {
     async function checkAuthentication() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/auth/me/`,
+          apiUrl('/auth/me/'),
           {
             credentials: 'include',
           },
@@ -138,7 +135,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/auth/login/`,
+        apiUrl('/auth/login/'),
         {
           method: 'POST',
           headers: {
@@ -199,7 +196,7 @@ function App() {
   async function handleSignOut() {
     try {
       await fetch(
-        `${API_BASE_URL}/auth/logout/`,
+        apiUrl('/auth/logout/'),
         {
           method: 'POST',
           credentials: 'include',
