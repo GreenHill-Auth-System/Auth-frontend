@@ -1,6 +1,34 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000'
+export function getApiBaseUrl(): string {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
+  }
+
+  if (typeof window !== 'undefined') {
+    const { hostname, protocol } = window.location
+
+    if (hostname.endsWith('.onrender.com')) {
+      return 'https://greenhill-auth-backend.onrender.com'
+    }
+
+    if (import.meta.env.DEV) {
+      return ''
+    }
+
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return `${protocol}//${hostname}:8000`
+    }
+  }
+
+  return 'http://localhost:8000'
+}
+
+export const API_BASE_URL = getApiBaseUrl()
+
+export function apiUrl(path: string): string {
+  const base = getApiBaseUrl()
+  const cleanPath = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${cleanPath}` : cleanPath
+}
 
 export type ProfileData = {
   first_name?: string
@@ -32,7 +60,7 @@ export const api = {
   async getProfile(): Promise<ProfileData | null> {
     try {
       const response = await fetch(
-        `${API_BASE_URL.replace(/\/$/, '')}/auth/profile/`,
+        apiUrl('/auth/profile/'),
         {
           credentials: 'include',
         },
@@ -62,7 +90,7 @@ export const api = {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL.replace(/\/$/, '')}/auth/profile/`,
+        apiUrl('/auth/profile/'),
         {
           method: 'POST',
           headers: {
@@ -88,7 +116,7 @@ export const api = {
   async getSettings(): Promise<UserSettingsData | null> {
     try {
       const response = await fetch(
-        `${API_BASE_URL.replace(/\/$/, '')}/auth/settings/`,
+        apiUrl('/auth/settings/'),
         {
           credentials: 'include',
         },
@@ -120,7 +148,7 @@ export const api = {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL.replace(/\/$/, '')}/auth/settings/`,
+        apiUrl('/auth/settings/'),
         {
           method: 'POST',
           headers: {
