@@ -132,9 +132,27 @@ export function WorkspacePage({
     }
   }, [])
 
+  
+
+
   function selectWorkspace(workspace: Workspace) {
-    if (workspace.url) {
-      window.open(workspace.url, '_blank', 'noopener,noreferrer')
+    const workspaceUrls: Record<Workspace['id'], string> = {
+      executive:
+        import.meta.env.VITE_EID_URL ||
+        'http://localhost:5174',
+      procurement:
+        import.meta.env.VITE_PROCUREMENT_URL ||
+        'http://localhost:5175',
+      service:
+        import.meta.env.VITE_INCIDENT_URL ||
+        workspace.url ||
+        'https://ismp-frontend.onrender.com/',
+    }
+
+    const targetUrl = workspace.url || workspaceUrls[workspace.id]
+
+    if (targetUrl) {
+      window.location.assign(targetUrl)
       return
     }
 
@@ -166,6 +184,7 @@ export function WorkspacePage({
     authenticatedUser?.name ||
     authenticatedUser?.email ||
     'Greenhill User'
+
 
   const accountInitials = accountName
     .split(' ')
