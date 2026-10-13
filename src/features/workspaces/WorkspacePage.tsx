@@ -124,7 +124,7 @@ export function WorkspacePage({
       'https://pms-frontend-4fm8.onrender.com/',
     service:
       import.meta.env.VITE_INCIDENT_URL ||
-      'https://ismp-frontend.onrender.com/',
+      'https://ismp-frontend-h4tv.onrender.com',
   }
 
   const targetUrl = workspace.url || workspaceUrls[workspace.id]

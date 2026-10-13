@@ -43,7 +43,7 @@ export const workspaces: Workspace[] = [
     iconBackground: 'max-sm:bg-[#e5f2ff]',
     background: 'bg-[linear-gradient(135deg,#fff_30%,#f4eafa)] max-sm:bg-[linear-gradient(135deg,#fff_30%,#e3f0ff)]',
     arrow: 'bg-[#183b69]',
-    url: 'https://ismp-frontend.onrender.com',
+    url: 'https://ismp-frontend-h4tv.onrender.com',
   },
 ]
 
