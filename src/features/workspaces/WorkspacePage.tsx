@@ -132,12 +132,23 @@ export function WorkspacePage({
     }
   }, [])
 
+  
+
+
   function selectWorkspace(workspace: Workspace) {
-    setDialog({
-      title: workspace.title,
-      message:
-        'This workspace will be available once its system is connected.',
-    })
+    const workspaceUrls: Record<Workspace['id'], string> = {
+      executive:
+        import.meta.env.VITE_EID_URL ||
+        'http://localhost:5174',
+      procurement:
+        import.meta.env.VITE_PROCUREMENT_URL ||
+        'http://localhost:5175',
+      service:
+        import.meta.env.VITE_INCIDENT_URL ||
+        'http://localhost:5176',
+    }
+
+    window.location.assign(workspaceUrls[workspace.id])
   }
 
   function handleUserUpdate(updated: {
@@ -161,6 +172,7 @@ export function WorkspacePage({
     authenticatedUser?.name ||
     authenticatedUser?.email ||
     'Greenhill User'
+
 
   const accountInitials = accountName
     .split(' ')
