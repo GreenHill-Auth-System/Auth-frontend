@@ -119,23 +119,6 @@ export function HelpView() {
             href="mailto:ictsupport@greenhillacademy.ac.ug"
             className="mt-4 block font-semibold text-xs text-[#204a8e] hover:underline"
           >
-            ictsupport@greenhillacademy.ac.ug
-          </a>
-        </div>
-
-        <div className="flex flex-col justify-between rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-          <div>
-            <div className="mb-4 grid size-11 place-items-center rounded-xl bg-[#fef5db] text-[#b88514]">
-              <FiPhone className="size-5" />
-            </div>
-            <h2 className="text-base font-bold text-navy">Direct Hotline</h2>
-            <p className="mt-1 text-xs text-muted">For urgent system and access outages.</p>
-          </div>
-          <a
-            href="tel:+256414342684"
-            className="mt-4 block font-semibold text-xs text-[#b88514] hover:underline"
-          >
-            +256 414 342 684 (Ext. 104)
           </a>
         </div>
 
