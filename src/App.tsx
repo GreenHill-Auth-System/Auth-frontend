@@ -18,7 +18,8 @@ function App() {
   const isWorkspaceRoute =
     window.location.pathname === '/workspaces' ||
     window.location.pathname === '/profile' ||
-    window.location.pathname === '/settings'
+    window.location.pathname === '/settings' ||
+    window.location.pathname === '/help'
   const [checkingAuthentication, setCheckingAuthentication] = useState(
     isWorkspaceRoute,
   )
@@ -42,7 +43,8 @@ function App() {
     if (
       (window.location.pathname === '/workspaces' ||
         window.location.pathname === '/profile' ||
-        window.location.pathname === '/settings') &&
+        window.location.pathname === '/settings' ||
+        window.location.pathname === '/help') &&
       params.get('login') === 'success'
     ) {
       setLoginSuccess(true)
@@ -83,7 +85,8 @@ function App() {
     if (
       path !== '/workspaces' &&
       path !== '/profile' &&
-      path !== '/settings'
+      path !== '/settings' &&
+      path !== '/help'
     ) {
       setCheckingAuthentication(false)
       return
@@ -215,7 +218,8 @@ function App() {
   if (
     path === '/workspaces' ||
     path === '/profile' ||
-    path === '/settings'
+    path === '/settings' ||
+    path === '/help'
   ) {
     if (checkingAuthentication) {
       return (
@@ -230,7 +234,9 @@ function App() {
         ? 'profile'
         : path === '/settings'
           ? 'settings'
-          : 'workspaces'
+          : path === '/help'
+            ? 'help'
+            : 'workspaces'
 
     return (
       <WorkspacePage
@@ -243,7 +249,9 @@ function App() {
               ? '/profile'
               : tab === 'settings'
                 ? '/settings'
-                : '/workspaces'
+                : tab === 'help'
+                  ? '/help'
+                  : '/workspaces'
           window.history.pushState(null, '', next)
           setPath(next)
         }}

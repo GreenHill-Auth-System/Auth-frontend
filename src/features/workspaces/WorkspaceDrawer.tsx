@@ -4,7 +4,7 @@ import { SchoolBrand } from '../../components/SchoolBrand'
 
 type WorkspaceDrawerProps = {
   accountName: string
-  activeTab?: 'workspaces' | 'profile' | 'settings'
+  activeTab?: 'workspaces' | 'profile' | 'settings' | 'help'
   onClose: () => void
   onWorkspaces: () => void
   onProfile: () => void
@@ -131,7 +131,8 @@ export function WorkspaceDrawer({
         </button>
         <button
           type="button"
-          className={itemClass}
+          aria-current={activeTab === 'help' ? 'page' : undefined}
+          className={`${itemClass} ${activeTab === 'help' ? activeClass : ''}`}
           onClick={() => select(onHelp)}
         >
           <FiHelpCircle className="size-5" aria-hidden="true" />

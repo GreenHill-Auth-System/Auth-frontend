@@ -6,7 +6,7 @@ import crest from '../../assets/Cropped Blue Crest Emblem.png'
 
 type WorkspaceSidebarProps = {
   accountName: string
-  activeTab?: 'workspaces' | 'profile' | 'settings'
+  activeTab?: 'workspaces' | 'profile' | 'settings' | 'help'
   onWorkspaces?: () => void
   onProfile: () => void
   onSettings: () => void

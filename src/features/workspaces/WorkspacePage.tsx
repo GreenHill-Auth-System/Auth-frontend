@@ -16,13 +16,16 @@ import { workspaces } from './workspaces'
 import type { Workspace } from './workspaces'
 import { ProfileView } from '../profile/ProfileView'
 import { SettingsView } from '../settings/SettingsView'
+import { HelpView } from '../help/HelpView'
 import { apiUrl } from '../../services/api'
+
+export type WorkspaceTab = 'workspaces' | 'profile' | 'settings' | 'help'
 
 type WorkspacePageProps = {
   onSignOut: () => void
   loginSuccess: boolean
-  initialTab?: 'workspaces' | 'profile' | 'settings'
-  onTabChange?: (tab: 'workspaces' | 'profile' | 'settings') => void
+  initialTab?: WorkspaceTab
+  onTabChange?: (tab: WorkspaceTab) => void
 }
 
 type DialogContent = {
@@ -44,7 +47,7 @@ export function WorkspacePage({
   initialTab = 'workspaces',
   onTabChange,
 }: WorkspacePageProps) {
-  const [activeTab, setActiveTab] = useState<'workspaces' | 'profile' | 'settings'>(
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>(
     initialTab,
   )
   const [accountOpen, setAccountOpen] = useState(false)
@@ -60,7 +63,7 @@ export function WorkspacePage({
     }
   }, [initialTab])
 
-  function switchTab(tab: 'workspaces' | 'profile' | 'settings') {
+  function switchTab(tab: WorkspaceTab) {
     setActiveTab(tab)
     onTabChange?.(tab)
   }
@@ -175,13 +178,7 @@ export function WorkspacePage({
         onWorkspaces={() => switchTab('workspaces')}
         onProfile={() => switchTab('profile')}
         onSettings={() => switchTab('settings')}
-        onHelp={() =>
-          setDialog({
-            title: 'Need help?',
-            message:
-              'Contact the ICT Support Team for help accessing your workspace.',
-          })
-        }
+        onHelp={() => switchTab('help')}
         onSignOut={onSignOut}
       />
 
@@ -267,13 +264,13 @@ export function WorkspacePage({
                   type="button"
                   onClick={() => {
                     setAccountOpen(false)
-                    setDialog({
-                      title: 'Need help?',
-                      message:
-                        'Contact the ICT Support Team for help accessing your workspace.',
-                    })
+                    switchTab('help')
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm text-navy hover:bg-slate-50 transition-colors"
+                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
+                    activeTab === 'help'
+                      ? 'bg-slate-100 font-bold text-navy'
+                      : 'text-navy hover:bg-slate-50'
+                  } transition-colors`}
                 >
                   <FiHelpCircle className="size-4 shrink-0" aria-hidden="true" />
                   Help
@@ -305,6 +302,10 @@ export function WorkspacePage({
         ) : activeTab === 'settings' ? (
           <div className="mx-auto flex w-full max-w-[980px] flex-1 flex-col items-stretch justify-start pt-2 pb-6">
             <SettingsView />
+          </div>
+        ) : activeTab === 'help' ? (
+          <div className="mx-auto flex w-full max-w-[980px] flex-1 flex-col items-stretch justify-start pt-2 pb-6">
+            <HelpView />
           </div>
         ) : (
           <div className="mx-auto flex w-full max-w-[930px] flex-1 flex-col items-center justify-center pb-4 mobile:items-stretch mobile:justify-start mobile:pb-0 mobile:sm:justify-center">
@@ -356,13 +357,7 @@ export function WorkspacePage({
 
             <button
               type="button"
-              onClick={() =>
-                setDialog({
-                  title: 'Need help?',
-                  message:
-                    'Contact the ICT Support Team for help accessing your workspace.',
-                })
-              }
+              onClick={() => switchTab('help')}
               className="mt-12 flex items-center gap-4 rounded-lg px-3 py-2 text-left hover:bg-white/70 mobile:mt-6 mobile:w-full mobile:rounded-[18px] mobile:bg-[#eff4fa] mobile:p-5"
             >
               <span className="grid shrink-0 place-items-center mobile:size-12 mobile:rounded-full mobile:bg-[#e0e9f4]">
