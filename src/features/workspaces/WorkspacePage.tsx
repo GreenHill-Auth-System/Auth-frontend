@@ -3,11 +3,8 @@ import {
   FiCheckCircle,
   FiChevronDown,
   FiExternalLink,
-  FiGrid,
   FiHelpCircle,
   FiLogOut,
-  FiSettings,
-  FiUser,
 } from 'react-icons/fi'
 
 import decorativeCrest from '../../assets/Cropped Blue Crest Emblem.png'
@@ -270,54 +267,27 @@ export function WorkspacePage({
                   type="button"
                   onClick={() => {
                     setAccountOpen(false)
-                    switchTab('profile')
+                    setDialog({
+                      title: 'Need help?',
+                      message:
+                        'Contact the ICT Support Team for help accessing your workspace.',
+                    })
                   }}
-                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
-                    activeTab === 'profile'
-                      ? 'bg-slate-100 font-bold text-navy'
-                      : 'text-navy hover:bg-slate-50'
-                  }`}
+                  className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm text-navy hover:bg-slate-50 transition-colors"
                 >
-                  <FiUser aria-hidden="true" />
-                  My profile
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAccountOpen(false)
-                    switchTab('settings')
-                  }}
-                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
-                    activeTab === 'settings'
-                      ? 'bg-slate-100 font-bold text-navy'
-                      : 'text-navy hover:bg-slate-50'
-                  }`}
-                >
-                  <FiSettings aria-hidden="true" />
-                  Settings
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAccountOpen(false)
-                    switchTab('workspaces')
-                  }}
-                  className={`flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm ${
-                    activeTab === 'workspaces'
-                      ? 'bg-slate-100 font-bold text-navy'
-                      : 'text-navy hover:bg-slate-50'
-                  }`}
-                >
-                  <FiGrid aria-hidden="true" />
-                  My workspace
+                  <FiHelpCircle className="size-4 shrink-0" aria-hidden="true" />
+                  Help
                 </button>
                 <div className="my-1 border-t border-slate-100" />
                 <button
                   type="button"
-                  onClick={onSignOut}
-                  className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm text-red-600 hover:bg-red-50"
+                  onClick={() => {
+                    setAccountOpen(false)
+                    onSignOut()
+                  }}
+                  className="flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  <FiLogOut aria-hidden="true" />
+                  <FiLogOut className="size-4 shrink-0" aria-hidden="true" />
                   Sign out
                 </button>
               </div>
