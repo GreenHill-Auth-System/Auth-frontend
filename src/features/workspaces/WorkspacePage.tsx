@@ -146,7 +146,7 @@ export function WorkspacePage({
       service:
         import.meta.env.VITE_INCIDENT_URL ||
         workspace.url ||
-        'https://ismp-frontend.onrender.com/',
+        'https://ismp-frontend.onrender.com',
     }
 
     const targetUrl = workspace.url || workspaceUrls[workspace.id]
