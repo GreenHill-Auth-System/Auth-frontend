@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { FormEvent, ChangeEvent } from 'react'
-import defaultAvatar from '../../assets/avatar.jpg'
+const defaultAvatar =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23e2e8f0"><circle cx="50" cy="50" r="50"/><path d="M50 45a16 16 0 1 0 0-32 16 16 0 0 0 0 32zm0 8c-18 0-35 9-35 27v4h70v-4c0-18-17-27-35-27z" fill="%2364748b"/></svg>'
 import { api } from '../../services/api'
 
 type ProfileViewProps = {
