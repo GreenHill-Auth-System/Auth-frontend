@@ -121,7 +121,7 @@ export function WorkspacePage({
       'https://greenhill-eid-frontend.onrender.com',
     procurement:
       import.meta.env.VITE_PROCUREMENT_URL ||
-      'https://pms-frontend-4fm8.onrender.com/',
+      'https://pms-backend-9b78.onrender.com/auth/login/',
     service:
       import.meta.env.VITE_INCIDENT_URL ||
       'https://ismp-frontend-h4tv.onrender.com',
