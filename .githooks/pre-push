@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo HEAD)
+
+if [ "$current_branch" = "main" ]; then
+  echo "ERROR: Direct pushes to 'main' are blocked."
+  echo "Create a feature branch and push that branch instead."
+  exit 1
+fi
+
+exit 0
