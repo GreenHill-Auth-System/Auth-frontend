@@ -14,7 +14,7 @@ const navigation = [
 type AdminLayoutProps = {
   title: string
   subtitle: string
-  active: 'Overview' | 'User Management'
+  active: 'Overview' | 'User Management' | 'Support Requests'
   onNavigate: (path: string) => void
   children: ReactNode
 }
@@ -42,6 +42,7 @@ export function AdminLayout({ title, subtitle, active, onNavigate, children }: A
     setMenuOpen(false)
     if (screen === 'Overview') return onNavigate('/super-admin')
     if (screen === 'User Management') return onNavigate('/super-admin/users')
+    if (screen === 'Support Requests') return onNavigate('/super-admin/support')
     setDialog({ title: screen, message: `${screen} is planned for an upcoming screen.` })
   }
   return (
@@ -52,8 +53,8 @@ export function AdminLayout({ title, subtitle, active, onNavigate, children }: A
         <button className="absolute right-2 top-[7px] hidden place-items-center rounded-md p-1.5 text-[22px] max-[700px]:grid" aria-label="Close navigation" onClick={() => setMenuOpen(false)}><FiX /></button>
         <nav className="relative z-20 px-3.5" aria-label="Administration">
           {navigation.map(({ title, icon: Icon, count }) => (
-            <button key={title} className={`relative mb-3 flex min-h-[47px] w-full items-center gap-[15px] rounded-[11px] px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#243e6c] [&_svg]:shrink-0 [&_svg]:text-[23px] [&_svg]:stroke-[1.5] [&_span]:whitespace-nowrap [&_b]:ml-auto [&_b]:grid [&_b]:h-[21px] [&_b]:min-w-[21px] [&_b]:place-items-center [&_b]:rounded-full [&_b]:bg-[#ffce36] [&_b]:text-[11px] [&_b]:text-[#11254b] max-[1200px]:gap-3 max-[1200px]:pl-3.5 max-[1200px]:text-xs ${title === active ? 'bg-[#2b467c] font-bold text-white before:absolute before:inset-y-0 before:left-0 before:w-[3px] before:rounded-[3px] before:bg-[#ffce36] [&_svg]:text-[#ffce36]' : ''}`} aria-current={title === active ? 'page' : undefined} onClick={() => openScreen(title)}>
-              <Icon aria-hidden="true" /><span>{title}</span>{count && <b>{count}</b>}
+            <button key={title} className={`relative mb-3 grid min-h-[47px] w-full grid-cols-[22px_minmax(0,1fr)_20px] items-center gap-2 rounded-[11px] px-3 py-2.5 text-left text-[13px] transition-colors hover:bg-[#243e6c] max-[1200px]:grid-cols-[20px_minmax(0,1fr)_18px] max-[1200px]:gap-1.5 max-[1200px]:px-2.5 max-[1200px]:text-xs ${title === active ? 'bg-[#2b467c] font-bold text-white before:absolute before:inset-y-0 before:left-0 before:w-[3px] before:rounded-[3px] before:bg-[#ffce36] [&_svg]:text-[#ffce36]' : ''}`} aria-current={title === active ? 'page' : undefined} onClick={() => openScreen(title)}>
+              <Icon aria-hidden="true" className="size-[22px] stroke-[1.5] max-[1200px]:size-5" /><span className="min-w-0 whitespace-nowrap">{title}</span>{count && <b className="grid size-5 shrink-0 place-items-center rounded-full bg-[#ffce36] text-[11px] leading-none text-[#11254b] max-[1200px]:size-[18px]">{count}</b>}
             </button>
           ))}
         </nav>
