@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { LoginPage } from './features/auth/LoginPage'
 import { WorkspacePage } from './features/workspaces/WorkspacePage'
 import { apiUrl } from './services/api'
+import { SuperAdminOverview } from './features/admin/SuperAdminOverview'
 
 type LoginError = {
   error: string
@@ -213,6 +214,10 @@ function App() {
 
       navigate('/')
     }
+  }
+
+  if (path === '/super-admin' || path === '/super-admin/') {
+    return <SuperAdminOverview />
   }
 
   if (
