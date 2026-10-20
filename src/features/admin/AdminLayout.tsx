@@ -14,7 +14,7 @@ const navigation = [
 type AdminLayoutProps = {
   title: string
   subtitle: string
-  active: 'Overview' | 'User Management' | 'Support Requests'
+  active: 'Overview' | 'User Management' | 'Support Requests' | 'Access & Security' | 'System Settings'
   onNavigate: (path: string) => void
   children: ReactNode
 }
@@ -43,6 +43,8 @@ export function AdminLayout({ title, subtitle, active, onNavigate, children }: A
     if (screen === 'Overview') return onNavigate('/super-admin')
     if (screen === 'User Management') return onNavigate('/super-admin/users')
     if (screen === 'Support Requests') return onNavigate('/super-admin/support')
+    if (screen === 'Access & Security') return onNavigate('/super-admin/security')
+    if (screen === 'System Settings') return onNavigate('/super-admin/settings')
     setDialog({ title: screen, message: `${screen} is planned for an upcoming screen.` })
   }
   return (

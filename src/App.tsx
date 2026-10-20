@@ -6,6 +6,8 @@ import { apiUrl } from './services/api'
 import { SuperAdminOverview } from './features/admin/SuperAdminOverview'
 import { UserManagementPage } from './features/admin/UserManagementPage'
 import { SupportRequestsPage } from './features/admin/SupportRequestsPage'
+import { AccessSecurityPage } from './features/admin/AccessSecurityPage'
+import { SystemSettingsPage } from './features/admin/SystemSettingsPage'
 
 type LoginError = {
   error: string
@@ -224,6 +226,14 @@ function App() {
 
   if (path === '/super-admin/support' || path === '/super-admin/support/') {
     return <SupportRequestsPage onNavigate={navigate} />
+  }
+
+  if (path === '/super-admin/security' || path === '/super-admin/security/') {
+    return <AccessSecurityPage onNavigate={navigate} />
+  }
+
+  if (path === '/super-admin/settings' || path === '/super-admin/settings/') {
+    return <SystemSettingsPage onNavigate={navigate} />
   }
 
   if (path === '/super-admin/users' || path === '/super-admin/users/') {

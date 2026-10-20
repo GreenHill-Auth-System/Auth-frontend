@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @source "./features/admin";
+@source "./features/admin/SystemSettingsPage.tsx";
 
 @theme {
   --font-sans: "Montserrat", sans-serif;
