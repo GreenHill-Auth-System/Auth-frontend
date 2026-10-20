@@ -4,6 +4,7 @@ import { LoginPage } from './features/auth/LoginPage'
 import { WorkspacePage } from './features/workspaces/WorkspacePage'
 import { apiUrl } from './services/api'
 import { SuperAdminOverview } from './features/admin/SuperAdminOverview'
+import { UserManagementPage } from './features/admin/UserManagementPage'
 
 type LoginError = {
   error: string
@@ -217,7 +218,11 @@ function App() {
   }
 
   if (path === '/super-admin' || path === '/super-admin/') {
-    return <SuperAdminOverview />
+    return <SuperAdminOverview onNavigate={navigate} />
+  }
+
+  if (path === '/super-admin/users' || path === '/super-admin/users/') {
+    return <UserManagementPage onNavigate={navigate} />
   }
 
   if (
