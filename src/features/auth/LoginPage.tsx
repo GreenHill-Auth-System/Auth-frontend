@@ -11,6 +11,7 @@ import { LoginForm } from './LoginForm'
 import { WorkspaceIntro } from './WorkspaceIntro'
 import { apiUrl } from '../../services/api'
 
+
 type LoginError = {
   error: string
   message: string
@@ -38,6 +39,8 @@ export function LoginPage({
   signOutSuccess,
 }: LoginPageProps) {
   const [googleLoginError, setGoogleLoginError] = useState(false)
+  //state declaration for the admin modal
+  const [showAdminModal, setShowAdminModal] = useState(false)
 
   useEffect(() => {
     // Read the error returned by the Django Google authentication flow.
@@ -67,6 +70,7 @@ export function LoginPage({
       window.clearTimeout(timeout)
     }
   }, [googleLoginError])
+
 
   return (
     <main className="grid h-svh grid-cols-[60%_40%] overflow-hidden bg-white mobile:flex mobile:flex-col">
@@ -140,7 +144,7 @@ export function LoginPage({
 
             }}
             onForgotPassword={() => {
-              /* TODO: Connect password recovery. */
+              setShowAdminModal(true)
             }}
             loginError={loginError}
           />
@@ -151,6 +155,72 @@ export function LoginPage({
           </p>
         </div>
       </section>
+
+      {/* Smaller & Shorter Pop-up Contact Admin Modal */}
+      {showAdminModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="relative w-full max-w-sm p-5 bg-white rounded-xl shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-200">
+            
+            {/* Close Icon (X Symbol) */}
+            <button
+              type="button"
+              onClick={() => setShowAdminModal(false)}
+              className="absolute top-3.5 right-3.5 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Close modal"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Shorter Text Content Layout */}
+            <div className="text-center mt-1">
+              <div className="mx-auto flex items-center justify-center h-10 w-10 rounded-full bg-blue-50 text-blue-600 mb-3">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 19v-8.93a2 2 0 01.89-1.664l8-4.666a2 2 0 012.22 0l8 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-2.25-1.5a2 2 0 00-2.22 0l-2.25 1.5" />
+                </svg>
+              </div>
+              
+              <h3 className="text-base font-bold text-gray-900 tracking-tight">
+                Contact Admin
+              </h3>
+              
+              <p className="mt-1.5 text-xs text-gray-500 leading-normal px-2">
+                Please contact the Greenhill Academy system administrator to reset your workspace password.
+              </p>
+            </div>
+                 {/* Action Control Button */}
+<div className="mt-4">
+  <button
+    type="button"
+    onClick={() => {
+      const email = "rinnetkeilah@gmail.com";
+      const subject = encodeURIComponent("Greenhill Workspace - Password Reset Request");
+      const body = encodeURIComponent("Hello Admin,\n\nI have forgotten my login password for the Greenhill Schools workspace. Kindly assist me in initiating a secure credentials reset.\n\nBest regards,");
+      
+      // 1. Automatically copy the email as a quiet background backup
+      navigator.clipboard.writeText(email);
+
+      // 2. Open the user's native email client setup
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+
+      // 3. Briefly notify them so they know it's ready either way
+      alert("Launching your email app! If your device doesn't open a mail window, the admin email (rinnetkeilah@gmail.com) has also been copied to your clipboard so you can easily paste it.");
+      
+      // 4. Safely close the pop-up window
+      setShowAdminModal(false);
+    }}
+    className="w-full inline-flex justify-center items-center px-4 py-2.5 text-xs font-semibold rounded-lg text-white shadow-sm transition-all text-center filter hover:brightness-110 cursor-pointer"
+    style={{ backgroundColor: '#203468' }}
+  >
+    Send Email to Admin
+  </button>
+</div>
+       
+
+          </div>
+        </div>
+      )}
     </main>
   )
 }
